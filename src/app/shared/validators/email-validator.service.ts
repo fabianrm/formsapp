@@ -8,19 +8,53 @@ export class EmailValidatorService implements AsyncValidator {
     // Este tipo de validador es cuando se espera una validación desde el backend,
     // para ver por ejemplo si un email fue tomado.
 
+    // validate(control: AbstractControl): Observable<ValidationErrors | null> {
+    //     const email = control.value;
+    //     console.log({ email });
+    //     return of({
+    //         emailTaken: true
+    //     }).pipe(
+    //         delay(2000)
+    //     );
+    // }
+
     validate(control: AbstractControl): Observable<ValidationErrors | null> {
+
         const email = control.value;
 
-        console.log({ email });
+        const httpCallObservable = new Observable<ValidationErrors | null>((subscriber) => {
 
-        return of({
-            emailTaken: true
+            console.log({ email });
+
+            if (email === 'fabianrm@gmail.com') {
+                subscriber.next({ emailTaken: true });
+                subscriber.complete();
+                return;
+            }
+
+            subscriber.next(null);
+            subscriber.complete();
+
         }).pipe(
-            delay(2000)
+            delay(3000)
         );
 
-
+        return httpCallObservable;
     }
+
+
+
+    //RETORNAR EMAIL DESDE EL BACKEND
+
+    // return this.http.get<any[]>(`http://localhost:3000/users?q=${ email }`)
+    // .pipe(
+    //   // delay(3000),
+    //   map( resp => {
+    //     return ( resp.length === 0 )
+    //         ? null
+    //         : { emailTaken: true }
+    //   })
+    // );
 
 
 }
